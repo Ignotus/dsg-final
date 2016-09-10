@@ -17,11 +17,6 @@ T_valid = data['T_valid'].astype('int32')
 X_test  = data['X_test'].astype('float32')
 
 positive = np.arange(len(T_train))[T_train == 1]
-negative = np.random.choice(np.arange(len(T_train))[T_train == 0], 3 * len(positive))
-selection = np.concatenate([positive, negative])
-
-X_train = X_train[selection]
-T_train = T_train[selection]
 
 model = Sequential()
 print 'FEATURES: %d' % X_train.shape[1]
@@ -33,7 +28,22 @@ model.add(Activation("sigmoid"))
 sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-model.fit(X_train, T_train, nb_epoch=20, batch_size=32, validation_data=(X_valid, T_valid))
+# Make the selection mask the negative ids
+selection_mask = np.arange(len(T_train))[T_train == 0]
+
+for epoch in range(20):
+    negative_samples = np.asarray(np.random.choice(selection_mask, 3 * len(positive)))
+    selection = np.concatenate([positive, negative_samples])
+
+    X_train_batch = X_train[selection]
+    T_train_batch = T_train[selection]
+
+    model.fit(X_train_batch, T_train_batch, nb_epoch=1, batch_size=32, validation_data=(X_valid, T_valid))
+
+    proba = model.predict_proba(X_train_batch, batch_size=32)
+    hard_examples = (proba > 0.1)[len(positive):].flatten()
+
+    selection_mask = np.setdiff1d(selection_mask, negative_samples[hard_examples])
 
 # classes = model.predict_classes(X_valid, batch_size=32)
 proba = model.predict_proba(X_valid, batch_size=32)
