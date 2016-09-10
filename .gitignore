@@ -93,3 +93,6 @@ data/*
 
 #Hidden files
 .*
+
+# my preprocessed
+preprocessedRiaan/*
