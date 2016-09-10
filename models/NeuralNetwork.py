@@ -1,6 +1,6 @@
 from keras.models import Sequential
 from keras.layers import Dense, Activation
-from keras.optimizers import SGD
+from keras.optimizers import SGD, Adam
 
 from make_prediction_file import make_prediction_file
 
@@ -25,7 +25,7 @@ model.add(Activation("relu"))
 model.add(Dense(1)) 
 model.add(Activation("sigmoid"))
 
-sgd = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = Adam(lr=0.001)
 model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 # Make the selection mask the negative ids
@@ -38,8 +38,12 @@ for epoch in range(20):
     X_train_batch = X_train[selection]
     T_train_batch = T_train[selection]
 
-    model.fit(X_train_batch, T_train_batch, nb_epoch=1, batch_size=32, validation_data=(X_valid, T_valid))
-
+    data = model.fit(X_train_batch, T_train_batch, nb_epoch=1, batch_size=32, validation_data=(X_valid, T_valid))
+    
+    print data.history['val_loss']
+    if data.history['val_loss'] < 0.015:
+        break
+    
     proba = model.predict_proba(X_train_batch, batch_size=32)
     hard_examples = (proba > 0.1)[len(positive):].flatten()
 
