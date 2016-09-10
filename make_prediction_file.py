@@ -26,4 +26,4 @@ def make_prediction_file(pred):
     
     shutil.make_archive('submission', 'zip', 'submission')  
 
-make_prediction_file(np.zeros(303913))
+#make_prediction_file(np.zeros(303913))
