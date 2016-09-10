@@ -24,6 +24,7 @@ X_train = X_train[selection]
 T_train = T_train[selection]
 
 model = Sequential()
+print 'FEATURES: %d' % X_train.shape[1]
 model.add(Dense(64, input_dim=X_train.shape[1], init='glorot_uniform'))
 model.add(Activation("relu"))
 model.add(Dense(1)) 
