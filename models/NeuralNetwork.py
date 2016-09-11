@@ -1,6 +1,7 @@
 from keras.models import Sequential
 from keras.layers import Dense, Activation
-from keras.optimizers import SGD, Adam
+from keras.optimizers import SGD, Adam, Adadelta
+from keras.layers.core import Dropout
 
 from make_prediction_file import make_prediction_file
 
@@ -21,11 +22,15 @@ positive = np.arange(len(T_train))[T_train == 1]
 model = Sequential()
 print 'FEATURES: %d' % X_train.shape[1]
 model.add(Dense(64, input_dim=X_train.shape[1], init='glorot_uniform'))
-model.add(Activation("relu"))
+model.add(Activation("tanh"))
+model.add(Dense(32, init='glorot_uniform'))
+model.add(Activation("tanh"))
+model.add(Dense(32, init='glorot_uniform'))
+model.add(Activation("sigmoid"))
 model.add(Dense(1)) 
 model.add(Activation("sigmoid"))
 
-sgd = Adam(lr=0.001)
+sgd = Adam()
 model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 # Make the selection mask the negative ids
@@ -34,6 +39,7 @@ negative_ids = np.arange(len(T_train))[T_train == 0]
 
 p = None
 for epoch in range(20):
+    print 'epoch ', epoch + 1    
     negative_samples = np.asarray(np.random.choice( negative_ids, 3 * len(positive), p=p))
     selection = np.concatenate([positive, negative_samples])
 

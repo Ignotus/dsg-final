@@ -5,17 +5,25 @@ from keras.layers.core import Dropout
 import keras as K
 from make_prediction_file import make_prediction_file
 
+from keras.regularizers import l2, activity_l2
+
 import numpy as np
 import scipy as sp
 import time
 
 def resnet():
     x = Input(shape=(44,), name='x')
-    y = Dense(64, activation='relu')(x)
-    z = merge([x, y], mode='concat')
+    
+    #y = Dense(128, activation='relu', init= 'glorot_normal')(x)
+    
+    #n = merge([x, y], mode = 'concat')
+    
+    a = Dense(128, activation='relu', init= 'glorot_normal', W_regularizer=l2(0.001), activity_regularizer=activity_l2(0.001))(x)
+    
+    z = merge([x, a], mode='concat')
     
     
-    main_loss = Dense(1, activation='sigmoid', name='main_output')(z)
+    main_loss = Dense(1, activation='sigmoid', name='main_output', init= 'glorot_normal', W_regularizer=l2(0.001), activity_regularizer=activity_l2(0.001))(z)
     model = Model(input=x, output=main_loss)
     
     model.compile(optimizer=Adam(), 
@@ -25,8 +33,8 @@ def resnet():
 
 data = np.load('../preprocessed/preprocess.npz')
 
-X_train = data['X_train'].astype('float32')
-T_train = data['T_train'].astype('int32')
+X_train = data['X_train_all'].astype('float32')
+T_train = data['T_train_all'].astype('int32')
 X_valid = data['X_valid'].astype('float32')
 T_valid = data['T_valid'].astype('int32')
 X_test  = data['X_test'].astype('float32')
@@ -42,13 +50,13 @@ print 'FEATURES: %d' % X_train.shape[1]
 #model.add(Activation("sigmoid"))
 
 model = resnet()
-
+model.summary()
 # Make the selection mask the negative ids
 negative_ids = np.arange(len(T_train))[T_train == 0]
 # selection_mask = (T_train == 0)
 
 p = None
-for epoch in range(20):
+for epoch in range(10):
     negative_samples = np.asarray(np.random.choice( negative_ids, 3 * len(positive), p=p))
     selection = np.concatenate([positive, negative_samples])
 
@@ -56,7 +64,7 @@ for epoch in range(20):
     T_train_batch = T_train[selection]
 
 
-    model.fit(X_train_batch, T_train_batch, nb_epoch=1, batch_size=32, validation_data=(X_valid, T_valid), verbose = 1)
+    model.fit(X_train_batch, T_train_batch, nb_epoch=1, batch_size=64, validation_data=(X_valid, T_valid), verbose = 1)
 
     p = model.predict(X_train[negative_ids], batch_size=32, verbose = 0).flatten()
     p = p / p.sum()
@@ -79,6 +87,7 @@ print '\n', np.isnan(proba.flatten()).sum()
 
 print 'Validation log:', logloss(T_valid, proba.flatten().astype('float64'))
 
-make_prediction_file(model.predict(X_test, batch_size=32).flatten().astype('float64'))
+model.save_weights('weights_resnet_2l_44i_64.h5')
+make_prediction_file(model.predict(X_test, batch_size=32, verbose = 0).flatten().astype('float64'))
 
 # print 'Training error', logloss(T_valid, proba)
