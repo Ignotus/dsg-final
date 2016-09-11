@@ -1,0 +1,136 @@
+(dp0
+S'Jonquille'
+p1
+(lp2
+F0.123657
+aS'2016-09-10 23:42:53'
+p3
+aI0
+asS'Melting'
+p4
+(lp5
+F33.250222
+aS'2016-09-10 23:42:53'
+p6
+aI0
+asS'team0x4d2'
+p7
+(lp8
+F0.21941
+aS'2016-09-10 23:42:53'
+p9
+aI0
+asS'DataNinja'
+p10
+(lp11
+F33.250222
+aS'2016-09-10 23:42:53'
+p12
+aI0
+asS'PondHoppers'
+p13
+(lp14
+F0.198483
+aS'2016-09-11 00:29:14'
+p15
+aI1
+asS'three-d-universum-nerds'
+p16
+(lp17
+F0.02852
+aS'2016-09-11 00:09:16'
+p18
+aI1
+asS'teamtabs'
+p19
+(lp20
+F0.16272
+aS'2016-09-10 23:42:53'
+p21
+aI0
+asS'Cantab'
+p22
+(lp23
+F0.011977
+aS'2016-09-10 23:42:53'
+p24
+aI0
+asS'lexis_army'
+p25
+(lp26
+F0.046761
+aS'2016-09-10 23:47:59'
+p27
+aI0
+asS'ml_noobs'
+p28
+(lp29
+F0.067503
+aS'2016-09-10 23:42:53'
+p30
+aI0
+asS'Frequentists_ISIKolkata'
+p31
+(lp32
+F0.158788
+aS'2016-09-11 00:24:52'
+p33
+aI1
+asS'MAtrixReloaded'
+p34
+(lp35
+F0.051562
+aS'2016-09-11 00:02:29'
+p36
+aI1
+aI0
+asS'MVA2016'
+p37
+(lp38
+F0.014446
+aS'2016-09-10 23:47:16'
+p39
+aI0
+asS'CUTM'
+p40
+(lp41
+F0.07776
+aS'2016-09-10 23:42:53'
+p42
+aI0
+asS'DSG_PolytechNique'
+p43
+(lp44
+F0.156064
+aS'2016-09-10 23:42:53'
+p45
+aI0
+asS'Brosio2BeWild'
+p46
+(lp47
+F0.129349
+aS'2016-09-10 23:42:53'
+p48
+aI0
+asS'Russian_Data_Mafia'
+p49
+(lp50
+F0.056937
+aS'2016-09-10 23:42:53'
+p51
+aI0
+asS'rohannaidu'
+p52
+(lp53
+F1.289324
+aS'2016-09-10 23:42:53'
+p54
+aI0
+asS'We_just_want_our_name_to_be'
+p55
+(lp56
+F0.050217
+aS'2016-09-10 23:42:53'
+p57
+aI0
+as.
