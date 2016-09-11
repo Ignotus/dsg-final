@@ -30,7 +30,7 @@ def build_model(X_train):
     model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.001), metrics=['accuracy'])
     return model
 
-def train_model(model, X_train, T_train, X_valid=None, T_valid=None, epochs=20):
+def train_model(model, X_train, T_train, X_valid=None, T_valid=None, epochs=10):
     sample_weights = None
     positive_ids = np.arange(len(T_train))[T_train == 1]
     negative_ids = np.arange(len(T_train))[T_train == 0]
@@ -56,15 +56,15 @@ def train_model(model, X_train, T_train, X_valid=None, T_valid=None, epochs=20):
 def main(datadir='../preprocessed/', modelfn='model_NN.h5'):
     data = np.load(os.path.join(datadir, 'preprocess.npz'))
 
-    X_train = data['X_train'].astype('float32')
-    T_train = data['T_train'].astype('int32')
-    X_valid = data['X_valid'].astype('float32')
-    T_valid = data['T_valid'].astype('int32')
+    # X_train = data['X_train'].astype('float32')
+    # T_train = data['T_train'].astype('int32')
+    # X_valid = data['X_valid'].astype('float32')
+    # T_valid = data['T_valid'].astype('int32')
 
-    # X_train = data['X_train_all'].astype('float32')
-    # T_train = data['T_train_all'].astype('int32')
-    # X_valid = None #data['X_valid'].astype('float32')
-    # T_valid = None # data['T_valid'].astype('int32')
+    X_train = data['X_train_all'].astype('float32')
+    T_train = data['T_train_all'].astype('int32')
+    X_valid = None #data['X_valid'].astype('float32')
+    T_valid = None # data['T_valid'].astype('int32')
 
     model = build_model(X_train)
     train_model(model, X_train, T_train, X_valid, T_valid)
