@@ -23,7 +23,7 @@ def build_model(X_train):
     model.add(Dense(64, input_dim=X_train.shape[1], init='glorot_uniform'))
     model.add(Activation("tanh"))
     # model.add(Dropout(0.5))
-    model.add(Dense(32, init='glorot_uniform', W_regularizer=l2(0.01), activity_regularizer=activity_l2(0.01))))
+    model.add(Dense(32, init='glorot_uniform'))
     model.add(Activation("tanh"))
     model.add(Dense(1)) 
     model.add(Activation("sigmoid"))
@@ -56,11 +56,15 @@ def train_model(model, X_train, T_train, X_valid=None, T_valid=None, epochs=20):
 def main(datadir='../preprocessed/', modelfn='model_NN.h5'):
     data = np.load(os.path.join(datadir, 'preprocess.npz'))
 
-    X_train = data['X_train_all'].astype('float32')
-    T_train = data['T_train_all'].astype('int32')
-    X_valid = None #data['X_valid'].astype('float32')
-    T_valid = None # data['T_valid'].astype('int32')
-    X_test  = data['X_test'].astype('float32')
+    X_train = data['X_train'].astype('float32')
+    T_train = data['T_train'].astype('int32')
+    X_valid = data['X_valid'].astype('float32')
+    T_valid = data['T_valid'].astype('int32')
+
+    # X_train = data['X_train_all'].astype('float32')
+    # T_train = data['T_train_all'].astype('int32')
+    # X_valid = None #data['X_valid'].astype('float32')
+    # T_valid = None # data['T_valid'].astype('int32')
 
     model = build_model(X_train)
     train_model(model, X_train, T_train, X_valid, T_valid)
