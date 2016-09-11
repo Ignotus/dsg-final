@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import SGD, Adam
 
 from make_prediction_file import make_prediction_file
@@ -22,11 +22,12 @@ model = Sequential()
 print 'FEATURES: %d' % X_train.shape[1]
 model.add(Dense(64, input_dim=X_train.shape[1], init='glorot_uniform'))
 model.add(Activation("relu"))
+model.add(Dropout(0.5))
 model.add(Dense(1)) 
 model.add(Activation("sigmoid"))
 
-sgd = Adam(lr=0.001)
-model.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
+
+model.compile(loss='binary_crossentropy', optimizer=Adam(lr=0.001), metrics=['accuracy'])
 
 # Make the selection mask the negative ids
 negative_ids = np.arange(len(T_train))[T_train == 0]
@@ -34,6 +35,8 @@ negative_ids = np.arange(len(T_train))[T_train == 0]
 
 p = None
 for epoch in range(20):
+    print '\nEPOCH %d\n' % epoch
+
     negative_samples = np.asarray(np.random.choice( negative_ids, 3 * len(positive), p=p))
     selection = np.concatenate([positive, negative_samples])
 
@@ -43,7 +46,7 @@ for epoch in range(20):
 
     model.fit(X_train_batch, T_train_batch, nb_epoch=1, batch_size=32, validation_data=(X_valid, T_valid))
 
-    p = model.predict_proba(X_train[negative_ids], batch_size=32).flatten()
+    p = model.predict_proba(X_train[negative_ids], batch_size=32).flatten() + 0.01 # smoothing 
     p = p / p.sum()
 
 
