@@ -2,7 +2,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.optimizers import SGD, Adam, Adadelta
 from keras.layers.core import Dropout
-
 from make_prediction_file import make_prediction_file
 
 import numpy as np
@@ -40,6 +39,7 @@ negative_ids = np.arange(len(T_train))[T_train == 0]
 p = None
 for epoch in range(20):
     print 'epoch ', epoch + 1    
+
     negative_samples = np.asarray(np.random.choice( negative_ids, 3 * len(positive), p=p))
     selection = np.concatenate([positive, negative_samples])
 
@@ -49,7 +49,7 @@ for epoch in range(20):
 
     model.fit(X_train_batch, T_train_batch, nb_epoch=1, batch_size=32, validation_data=(X_valid, T_valid))
 
-    p = model.predict_proba(X_train[negative_ids], batch_size=32).flatten()
+    p = model.predict_proba(X_train[negative_ids], batch_size=32).flatten() + 0.01 # smoothing 
     p = p / p.sum()
 
 
