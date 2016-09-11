@@ -34,6 +34,6 @@ model.compile(loss='categorical_crossentropy',
               metrics=['loss'])
 
 model.fit(X_train, Y_train,
-          nb_epoch=20,
+          nb_epoch=20,e
           batch_size=16)
 score = model.evaluate(X_test, Y_test, batch_size=16)
